@@ -44,6 +44,7 @@
 
 - [Overview](#-overview)
 - [How It Works](#️-how-it-works)
+- [Screenshots](#-screenshots)
 - [Features](#-features)
 - [Architecture](#-architecture)
 - [Project Structure](#️-project-structure)
@@ -87,6 +88,35 @@ The vision pipeline annotates every detected cube with a color-matched bounding 
 <div align="center">
   <img src="detected_cards_colored.png" alt="OpenCV detection result with colored bounding boxes" width="520"/>
 </div>
+
+---
+
+## 📸 Screenshots
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="screenshots/01-scene-overview.png" alt="Unity scene with scattered colored cubes and the drone awaiting capture" width="100%"/>
+      <br/><sub><b>Scene overview</b> — colored cubes scattered across the field, drone idle, awaiting a capture.</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="screenshots/02-vision-pipeline.png" alt="OpenCV detection script running with terminal output" width="100%"/>
+      <br/><sub><b>Vision pipeline</b> — <code>main.py</code> running HSV segmentation and streaming results to Unity.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <img src="screenshots/03-autonomous-transport.png" alt="Drone carrying a gripped cube across the scene" width="100%"/>
+      <br/><sub><b>Autonomous transport</b> — the drone grips a cube and flies it toward its matching drop-off zone.</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="screenshots/04-near-complete.png" alt="Scene near completion with most cubes already sorted" width="100%"/>
+      <br/><sub><b>Near completion</b> — most cubes already delivered; the field clears as the sort finishes.</sub>
+    </td>
+  </tr>
+</table>
+
+> The annotated detection output is shown under [How It Works](#-detection-result).
 
 ---
 
