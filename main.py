@@ -86,36 +86,40 @@ def move_drone(color_command):
     host = 'localhost'
     port = 65431
     
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((host, port))
-            
-            # Send command
-            s.sendall(color_command.encode())
-            print(f"[*] Sent '{color_command}' command to Unity. Awaiting drone execution...")
-            
-            # Listening loop waiting for Unity status updates
-            while True:
-                data = s.recv(1024)
-                if not data:
-                    print("[!] Connection closed unexpectedly by Unity.")
-                    break
-                    
-                response = data.decode().strip().lower()
+    while True:  # Keep retrying until accepted
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((host, port))
                 
-                if 'idle' in response:
-                    print(f"[+] Unity reported: Drone is IDLE. Task completed successfully.")
-                    break
-                elif 'busy' in response:
-                    print(f"[!] Unity reported: Drone is BUSY. Command rejected.")
-                    break
-                else:
-                    print(f"[-] Received unexpected response from Unity: {response}")
+                # Send command
+                s.sendall(color_command.encode())
+                print(f"[*] Sent '{color_command}' command to Unity. Awaiting drone execution...")
+                
+                # Listening loop waiting for Unity status updates
+                while True:
+                    data = s.recv(1024)
+                    if not data:
+                        print("[!] Connection closed unexpectedly by Unity.")
+                        break
+                        
+                    response = data.decode().strip().lower()
                     
-    except ConnectionRefusedError:
-        print("[!] Error: Could not connect to Unity. Ensure your Unity game is running and listening.")
-    except Exception as e:
-        print(f"[!] Network Error: {e}")
+                    if 'idle' in response:
+                        print(f"[+] Unity reported: Drone is IDLE. Task completed successfully.")
+                        return  # Success, exit the retry loop
+                    elif 'busy' in response:
+                        print(f"[!] Unity reported: Drone is BUSY. Retrying in 1 second...")
+                        time.sleep(1)
+                        break  # Break inner loop to retry
+                    else:
+                        print(f"[-] Received unexpected response from Unity: {response}")
+                        
+        except ConnectionRefusedError:
+            print("[!] Could not connect to Unity. Retrying in 1 second...")
+            time.sleep(1)
+        except Exception as e:
+            print(f"[!] Network Error: {e}")
+            return
 
 
 # 7. Main Loop
